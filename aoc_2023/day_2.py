@@ -54,9 +54,32 @@ def sum_possible_games(fp: str, reds: int, greens: int, blue: int) -> int:
     return game_id_sum
 
 
+def min_power_for_game(game: Game) -> int:
+    min_red = min_blue = min_green = 1
+    for draw in game.draws:
+        min_red, min_blue, min_green = (
+            max(min_red, draw.reds),
+            max(min_blue, draw.blues),
+            max(min_green, draw.greens),
+        )
+
+    return min_red * min_blue * min_green
+
+
+def sum_powers_for_games(fp: str) -> int:
+    game_id_sum = 0
+    with open(fp) as file:
+        for line in file:
+            game = line_to_game(line)
+            game_id_sum += min_power_for_game(game)
+
+    return game_id_sum
+
+
 def main() -> None:
     fp = "aoc_2023/inputs/day_2.txt"
     print(sum_possible_games(fp, 12, 13, 14))
+    print(sum_powers_for_games(fp))
 
 
 if __name__ == "__main__":

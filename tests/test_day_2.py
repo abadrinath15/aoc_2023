@@ -82,3 +82,40 @@ def test_is_game_possible(game: day_2.Game, exp: bool) -> None:
 def test_sum_possible_games() -> None:
     res = day_2.sum_possible_games("aoc_2023/examples/day_2a.txt", 12, 13, 14)
     assert res == 8
+
+
+@mark.parametrize(
+    ["game", "exp"],
+    [
+        (
+            day_2.Game(
+                1,
+                [
+                    day_2.ElfDraw(4, 3, 0),
+                    day_2.ElfDraw(1, 6, 2),
+                    day_2.ElfDraw(0, 0, 2),
+                ],
+            ),
+            48,
+        ),
+        (
+            day_2.Game(
+                3,
+                [
+                    day_2.ElfDraw(20, 6, 8),
+                    day_2.ElfDraw(4, 5, 13),
+                    day_2.ElfDraw(1, 0, 5),
+                ],
+            ),
+            1560,
+        ),
+    ],
+)
+def test_min_power_for_game(game: day_2.Game, exp: int) -> None:
+    res = day_2.min_power_for_game(game)
+    assert exp == res
+
+
+def test_sum_powers_for_games() -> None:
+    res = day_2.sum_powers_for_games("aoc_2023/examples/day_2a.txt")
+    assert res == 2286
