@@ -36,8 +36,9 @@ def number_match(line: str) -> Iterator[Match[str]]:
     yield from finditer(r"[0-9]+", line)
 
 
-def sum_part_numbers(fp: str) -> int:
-    total = 0
+def number_neighbors_and_symbol_locations(
+    fp: str,
+) -> tuple[list[tuple[int, set[tuple[int, int]]]], dict[tuple[int, int], str]]:
     with open(fp) as file:
         line_length = len(next(iter(file)))
 
@@ -60,6 +61,14 @@ def sum_part_numbers(fp: str) -> int:
             for sym_location in symbol_index(line_cleaned):
                 symbol_locations[(row, sym_location[1])] = sym_location[0]
 
+    return number_neighbors, symbol_locations
+
+
+def sum_part_numbers(
+    number_neighbors: list[tuple[int, set[tuple[int, int]]]],
+    symbol_locations: dict[tuple[int, int], str],
+) -> int:
+    total = 0
     for num, neighbors in number_neighbors:
         for neigh in neighbors:
             if neigh in symbol_locations:
@@ -68,9 +77,37 @@ def sum_part_numbers(fp: str) -> int:
     return total
 
 
+def sum_gear_ratios(
+    number_neighbors: list[tuple[int, set[tuple[int, int]]]],
+    symbol_locations: dict[tuple[int, int], str],
+) -> int:
+    banned: set[tuple[int, int]] = set()
+    ones: dict[tuple[int, int], int] = {}
+    twos: dict[tuple[int, int], int] = {}
+    for num, neighbors in number_neighbors:
+        for neigh in neighbors:
+            if (
+                neigh in symbol_locations
+                and symbol_locations[neigh] == "*"
+                and neigh not in banned
+            ):
+                if neigh in twos:
+                    twos.pop(neigh)
+                    banned.add(neigh)
+                elif neigh in ones:
+                    curr = ones.pop(neigh)
+                    twos[neigh] = curr * num
+                else:
+                    ones[neigh] = num
+
+    return sum(twos.values())
+
+
 def main() -> None:
     fp = "aoc_2023/inputs/day_3.txt"
-    print(sum_part_numbers(fp))
+    number_neighbors, symbol_locations = number_neighbors_and_symbol_locations(fp)
+    print(sum_part_numbers(number_neighbors, symbol_locations))
+    print(sum_gear_ratios(number_neighbors, symbol_locations))
 
 
 if __name__ == "__main__":
