@@ -1,8 +1,8 @@
-from re import match as re_match
+from re import search
 
 
 def winners_yours_from_line(line: str) -> tuple[int, set[int], list[int]]:
-    if (match_res := re_match(r"Card (\d+): ([0-9 ]+) \| ([0-9 ]+)", line)) is not None:
+    if (match_res := search(r"(\d+): ([0-9 ]+) \| ([0-9 ]+)", line)) is not None:
         card_number = int(match_res[1])
         winners = set(int(x) for x in match_res[2].split())
         yours = [int(x) for x in match_res[3].split()]
