@@ -36,3 +36,8 @@ def test_pass_through_map(seeds: list[int], sd_map: day_5.SourceDestMap) -> None
 def test_lowest_location() -> None:
     res = day_5.lowest_location("aoc_2023/examples/day_5a.txt")
     assert res == 35
+
+
+def test_lowest_location_ranges() -> None:
+    res = day_5.lowest_location_ranges("aoc_2023/examples/day_5a.txt")
+    assert res == 46
