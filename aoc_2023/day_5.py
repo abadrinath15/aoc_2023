@@ -68,6 +68,14 @@ def pass_intervals_through(
     while len(intervals) > 0:
         interval = intervals.popleft()
         for eps, dl in zip(sd_map.source_endpoints, sd_map.dest_left):
+            if interval[0] < eps[0] and interval[1] > eps[1]:
+                left_only = interval[0], eps[0] - 1
+                intervals.append(left_only)
+                right_only = eps[1] + 1, interval[1]
+                intervals.append(right_only)
+                new_intervals.append((dl, dl + eps[1] - eps[0]))
+                break
+
             # left and overlapping
             if interval[0] < eps[0] <= interval[1] and interval[1] <= eps[1]:
                 left_only = interval[0], eps[0] - 1
