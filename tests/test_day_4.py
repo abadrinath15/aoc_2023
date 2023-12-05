@@ -33,3 +33,8 @@ def test_score_card(winners: set[int], yours: list[int], exp: int) -> None:
 def test_sum_card_scores() -> None:
     res = day_4.sum_card_scores("aoc_2023/examples/day_4a.txt")
     assert res == 13
+
+
+def test_score_scratch_correct_rules() -> None:
+    res = day_4.score_scratch_correct_rules("aoc_2023/examples/day_4a.txt")
+    assert res == 30
