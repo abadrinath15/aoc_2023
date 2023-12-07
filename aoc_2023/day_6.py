@@ -32,7 +32,10 @@ def product_winning_performances(fp: str) -> int:
         times = times_from_line(next(file))
         distances = distances_from_line(next(file))
 
-    return functools.reduce(operator.mul, map(winning_performances, times, distances))
+    print(functools.reduce(operator.mul, map(winning_performances, times, distances)))
+    combined_times = int("".join(str(x) for x in times))
+    combined_distances = int("".join(str(x) for x in distances))
+    return winning_performances(combined_times, combined_distances)
 
 
 def main() -> None:
