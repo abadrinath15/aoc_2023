@@ -33,10 +33,17 @@ def hand_to_type(hand: str) -> typing.Literal[1, 2, 3, 4, 5, 6, 7]:
     raise ValueError(f"Yikes, we couldn't score {hand=}")
 
 
-def hand_type_lesser(hand_1: str, hand_2: str) -> bool:
+def hand_type_lesser(hand_1: str, hand_2: str, use_joker: bool) -> bool:
     for card_1, card_2 in zip(hand_1, hand_2):
         if card_1 == card_2:
             continue
+
+        if use_joker:
+            if card_1 == "J":
+                return True
+
+            if card_2 == "J":
+                return False
 
         if card_1.isdigit():
             if not card_2.isdigit():
@@ -56,18 +63,41 @@ def hand_type_lesser(hand_1: str, hand_2: str) -> bool:
         )
 
 
-def total_winnings(fp: str) -> int:
+def total_winnings(fp: str, use_joker: bool) -> int:
     type_dicts: dict[int, list[tuple[str, int]]] = {x: list() for x in range(1, 8)}
     with open(fp) as file:
         for line in file:
             hand, bid_str = line.split()
             hand_type = hand_to_type(hand)
+            if use_joker and "J" in hand:
+                max_hand_type = hand_type
+                for replace in [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5",
+                    "6",
+                    "7",
+                    "8",
+                    "9",
+                    "T",
+                    "Q",
+                    "K",
+                    "A",
+                ]:
+                    new_hand = hand.replace("J", replace)
+                    new_hand_type = hand_to_type(new_hand)
+                    if new_hand_type > max_hand_type:
+                        max_hand_type = new_hand_type
+                else:
+                    hand_type = max_hand_type
             type_dicts[hand_type].append((hand, int(bid_str)))
 
     for lt in type_dicts.values():
         lt.sort(
             key=functools.cmp_to_key(
-                lambda x, y: -1 if hand_type_lesser(x[0], y[0]) else 1
+                lambda x, y: -1 if hand_type_lesser(x[0], y[0], use_joker) else 1
             )
         )
 
@@ -82,7 +112,8 @@ def total_winnings(fp: str) -> int:
 
 
 def main(fp: str) -> None:
-    print(total_winnings(fp))
+    print(total_winnings(fp, False))
+    print(total_winnings(fp, True))
 
 
 if __name__ == "__main__":
