@@ -44,7 +44,7 @@ def test_map_from_str(map_str: str, exp_map: dict[str, tuple[str, str]]) -> None
 def test_num_steps(
     exp_map: dict[str, tuple[str, str]], instructions: str, exp: int
 ) -> None:
-    res = day_8.num_steps(exp_map, instructions)
+    res = day_8.num_steps(exp_map, instructions, "AAA", day_8.standard_end)
     assert res == exp
 
 
@@ -55,3 +55,8 @@ def test_num_steps(
 def test_num_steps_from_file(fp: str, exp: int) -> None:
     res = day_8.num_steps_from_file(fp)
     assert res == exp
+
+
+def test_num_steps_from_file_ghost() -> None:
+    res = day_8.num_steps_from_file_ghost("aoc_2023/examples/day_8c.txt")
+    assert res == 6
