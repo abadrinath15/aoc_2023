@@ -20,7 +20,9 @@ def extrapolate_history_front(history: "pandas.Series[float]") -> int:
         reduced_histories.append(history)
 
     return int(
-        functools.reduce(lambda x, y: y - x, (x.iat[0] for x in reduced_histories))
+        functools.reduce(
+            lambda x, y: y - x, (x.iat[0] for x in reduced_histories[::-1])
+        )
     )
 
 
